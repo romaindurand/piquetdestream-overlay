@@ -1,2 +1,13 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script>
+	import '../style.css';
+	import { page } from '$app/stores';
+	const name = $page.url.searchParams.get('name');
+</script>
+
+<span class="name">{name}</span>
+
+<style>
+	.name {
+		color: red;
+	}
+</style>
