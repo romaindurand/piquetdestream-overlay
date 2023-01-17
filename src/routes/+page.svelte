@@ -1,5 +1,5 @@
 <script>
-	import '../style.css';
+	import '../base.css';
 	import { page } from '$app/stores';
 	const name = $page.url.searchParams.get('name');
 </script>
@@ -13,7 +13,7 @@
 
 <div class="nameplate">
 	<div class="tick" />
-	<h2 id="name">{name}</h2>
+	<h2>{name}</h2>
 </div>
 
 <style>
