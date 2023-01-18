@@ -58,13 +58,15 @@
 </svelte:head>
 
 {#if showNotification}
-	<div class="nameplate" transition:fade>
-		<div class="tick" />
-		<h1>{notificationMessage}</h1>
+	<div class="wrapper">
+		<div class="nameplate" transition:fade>
+			<div class="tick" />
+			<h1>{notificationMessage}</h1>
+		</div>
+		<video autoplay transition:fade muted playsinline>
+			<source src={`./notifications/${randomAnimation}`} type="video/webm" />
+		</video>
 	</div>
-	<video autoplay transition:fade muted playsinline>
-		<source src={`./notifications/${randomAnimation}`} type="video/webm" />
-	</video>
 {/if}
 
 <!-- {#if import.meta.env.MODE === 'development'}
@@ -76,9 +78,16 @@
 	/* pre {
 		text-align: left;
 	} */
+	.wrapper {
+		display: flex;
+		flex-direction: column;
+		position: relative;
+	}
 	video {
+		position: relative;
+		left: 0;
 		margin-top: 20px;
-		width: 300px;
+		width: 500px;
 	}
 
 	.nameplate {
