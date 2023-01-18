@@ -1,29 +1,48 @@
 <script>
 	import '../base.css';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 
 	let notifications = [];
 	let showNotification = false;
 	let notificationMessage = '';
+	let randomAnimation = '1.webm';
 
 	$: {
-		if (notifications.length > 0 && !showNotification) {
-			const last = notifications[0];
-			const { amount, name } = JSON.parse(last.data); //TODO : update according to actual data structure
-			notificationMessage = `${name} vient de donner ${amount} € !`;
-			showNotification = true;
-			window.setTimeout(() => {
-				showNotification = false;
-				notifications.shift();
-				notifications = [...notifications];
-			}, 5000);
+		if (notifications.length > 0) {
+			dequeueNotification();
 		}
+	}
+
+	async function dequeueNotification() {
+		if (showNotification) return;
+		const last = notifications[0];
+		const { amount, name } = JSON.parse(last.data); //TODO : update according to actual data structure
+
+		notificationMessage = name
+			? `${name} vient de donner ${amount} € !`
+			: `Un·e camarade vient de donner ${amount} € !`;
+		randomAnimation = `${Math.floor(Math.random() * 6) + 1}.webm`;
+		showNotification = true;
+		await tick();
+		await sleep(10);
+		showNotification = false;
+		await tick();
+		await sleep(0.5);
+		notifications.shift();
+		notifications = [...notifications];
+	}
+
+	async function sleep(s) {
+		return new Promise((resolve) => {
+			window.setTimeout(resolve, s * 1000);
+		});
 	}
 
 	onMount(() => {
 		const evtSource = new EventSource('https://piquetdestream-api.fly.dev/v1/counter/sse');
 		evtSource.addEventListener('new-donation', handleEvent);
+		window.ping = handleEvent;
 	});
 
 	function handleEvent(event) {
@@ -43,17 +62,33 @@
 		<div class="tick" />
 		<h1>{notificationMessage}</h1>
 	</div>
+	<video autoplay transition:fade muted playsinline>
+		<source src={`./notifications/${randomAnimation}`} type="video/webm" />
+	</video>
 {/if}
 
+<!-- {#if import.meta.env.MODE === 'development'}
+	<pre>
+	{JSON.stringify(notifications, null, 2)}
+</pre>
+{/if} -->
 <style>
+	/* pre {
+		text-align: left;
+	} */
+	video {
+		margin-top: 20px;
+		width: 300px;
+	}
+
 	.nameplate {
 		position: relative;
 		margin: 20px 0 0 0;
 		padding: 0 50px;
 		font-weight: normal;
-		color: #19ba9b;
-		border: solid #19ba9b 8px;
-		border-radius: 40px 40px 40px 10px;
+		color: #9a0022;
+		border: solid #9a0022 8px;
+		border-radius: 40px 40px 40px 40px;
 		display: inline-block;
 		min-width: 200px;
 		text-align: center;
@@ -67,13 +102,13 @@
 		transform: rotate(45deg);
 		position: absolute;
 		right: 15%;
-		top: -18px;
+		top: -19px;
 		background: white;
 		margin: auto;
-		border-left: solid #19ba9b 8px;
+		border-left: solid #9a0022 8px;
 		border-right: solid transparent 8px;
 		border-bottom: solid transparent 8px;
-		border-top: solid #19ba9b 8px;
+		border-top: solid #9a0022 8px;
 		z-index: 1;
 		display: block;
 	}
