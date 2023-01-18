@@ -1,7 +1,41 @@
 <script>
 	import '../base.css';
-	import { page } from '$app/stores';
-	const name = $page.url.searchParams.get('name');
+	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
+
+	let notifications = [];
+	let showNotification = false;
+	let notificationMessage = '';
+
+	console.log(import.meta.env.MODE);
+
+	$: {
+		if (notifications.length > 0 && !showNotification) {
+			const last = notifications[0];
+			const { amount, name } = JSON.parse(last.data); //TODO : update according to actual data structure
+			notificationMessage = `${name} vient de donner ${amount} € !`;
+			showNotification = true;
+			window.setTimeout(() => {
+				showNotification = false;
+				notifications.shift();
+				notifications = [...notifications];
+			}, 5000);
+		}
+	}
+
+	onMount(() => {
+		const evtSource = new EventSource('https://piquetdestream-api.fly.dev/v1/counter/sse', {
+			withCredentials: true
+		});
+
+		evtSource.addEventListener('new-donation', logEvent);
+		window.ping = logEvent;
+	});
+
+	function logEvent(event) {
+		console.dir({ event }, { depth: null });
+		notifications = [...notifications, event];
+	}
 </script>
 
 <svelte:head>
@@ -11,12 +45,21 @@
 	/>
 </svelte:head>
 
-<div class="nameplate">
-	<div class="tick" />
-	<h2>{name}</h2>
-</div>
+{#if showNotification}
+	<div class="nameplate" transition:fade>
+		<div class="tick" />
+		<h2>{notificationMessage}</h2>
+	</div>
+{/if}
+
+{#if import.meta.env.MODE === 'development'}
+	<pre>{JSON.stringify(notifications, null, 2)}</pre>
+{/if}
 
 <style>
+	pre {
+		text-align: left;
+	}
 	.nameplate {
 		position: relative;
 		font-family: 'Nerko One';
