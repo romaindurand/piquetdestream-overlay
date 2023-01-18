@@ -2,3 +2,10 @@ body {
 	margin: 0;
 	text-align: center;
 }
+
+h1 {
+	font-family: 'Nerko One';
+	display: inline;
+	font-size: 2em;
+	font-weight: normal;
+}

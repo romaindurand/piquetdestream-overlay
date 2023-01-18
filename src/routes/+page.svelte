@@ -7,8 +7,6 @@
 	let showNotification = false;
 	let notificationMessage = '';
 
-	console.log(import.meta.env.MODE);
-
 	$: {
 		if (notifications.length > 0 && !showNotification) {
 			const last = notifications[0];
@@ -24,16 +22,11 @@
 	}
 
 	onMount(() => {
-		const evtSource = new EventSource('https://piquetdestream-api.fly.dev/v1/counter/sse', {
-			withCredentials: true
-		});
-
-		evtSource.addEventListener('new-donation', logEvent);
-		window.ping = logEvent;
+		const evtSource = new EventSource('https://piquetdestream-api.fly.dev/v1/counter/sse');
+		evtSource.addEventListener('new-donation', handleEvent);
 	});
 
-	function logEvent(event) {
-		console.dir({ event }, { depth: null });
+	function handleEvent(event) {
 		notifications = [...notifications, event];
 	}
 </script>
@@ -48,21 +41,13 @@
 {#if showNotification}
 	<div class="nameplate" transition:fade>
 		<div class="tick" />
-		<h2>{notificationMessage}</h2>
+		<h1>{notificationMessage}</h1>
 	</div>
 {/if}
 
-{#if import.meta.env.MODE === 'development'}
-	<pre>{JSON.stringify(notifications, null, 2)}</pre>
-{/if}
-
 <style>
-	pre {
-		text-align: left;
-	}
 	.nameplate {
 		position: relative;
-		font-family: 'Nerko One';
 		margin: 20px 0 0 0;
 		padding: 0 50px;
 		font-weight: normal;
@@ -74,13 +59,6 @@
 		text-align: center;
 		font-size: 2em;
 		background: white;
-	}
-
-	h2 {
-		display: inline;
-		font-size: 2em;
-		font-weight: normal;
-		z-index: 100;
 	}
 
 	.tick {
