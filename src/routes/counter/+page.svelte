@@ -18,3 +18,10 @@
 </script>
 
 <h1>{counter}€</h1>
+
+<style>
+	h1 {
+		font-size: 120px;
+		color: #9a0022;
+	}
+</style>
