@@ -1,10 +1,10 @@
 <script>
-	import '../base.css';
 	import { onMount, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 
 	let notifications = [];
 	let showNotification = false;
+	let notificationName = '';
 	let notificationMessage = '';
 	let randomAnimation = '1.webm';
 
@@ -17,9 +17,10 @@
 	async function dequeueNotification() {
 		if (showNotification) return;
 		const last = notifications[0];
-		const { amount, name } = JSON.parse(last.data); //TODO : update according to actual data structure
+		const { amount, name, message } = JSON.parse(last.data); //TODO : update according to actual data structure
 
-		notificationMessage = name
+		notificationMessage = message;
+		notificationName = name
 			? `${name} vient de donner ${amount} € !`
 			: `Un·e camarade vient de donner ${amount} € !`;
 		randomAnimation = `${Math.floor(Math.random() * 6) + 1}.webm`;
@@ -61,8 +62,9 @@
 	<div class="wrapper">
 		<div class="nameplate" transition:fade>
 			<div class="tick" />
-			<h1>{notificationMessage}</h1>
+			<h1>{notificationName}</h1>
 		</div>
+		{#if notificationMessage}<div class="message">{notificationMessage}</div>{/if}
 		<video autoplay transition:fade muted playsinline>
 			<source src={`./notifications/${randomAnimation}`} type="video/webm" />
 		</video>
@@ -120,5 +122,16 @@
 		border-top: solid #9a0022 8px;
 		z-index: 1;
 		display: block;
+	}
+
+	.message {
+		font-family: cursive;
+		font-size: 1.5em;
+		font-weight: normal;
+		color: white;
+		text-shadow: 2px 0 5px black, -2px 0 5px black, 0 2px 5px black, 0 -2px 5px black;
+		text-align: center;
+		margin: 20px 0 0 0;
+		word-break: break-word;
 	}
 </style>
