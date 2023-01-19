@@ -1,7 +1,11 @@
 <script>
 	import { onMount } from 'svelte';
 
-	let counter = 0;
+	let counter = '0.00';
+	let integerValue, decimalValue;
+	$: {
+		[integerValue, decimalValue] = String(counter).split('.');
+	}
 
 	onMount(async () => {
 		const response = await window.fetch('https://piquetdestream-api.fly.dev/v1/counter/state');
@@ -17,11 +21,28 @@
 	}
 </script>
 
-<h1>{counter}€</h1>
+<h1>
+	<span class="integer" style={`--num: ${integerValue};`} /><span>.{decimalValue}€</span>
+</h1>
 
 <style>
 	h1 {
 		font-size: 120px;
 		color: #9a0022;
+	}
+
+	@property --num {
+		syntax: '<integer>';
+		initial-value: 0;
+		inherits: false;
+	}
+
+	span.integer {
+		transition: --num 5s;
+		counter-set: num var(--num);
+	}
+
+	span.integer::after {
+		content: counter(num);
 	}
 </style>
