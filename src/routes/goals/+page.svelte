@@ -75,14 +75,14 @@
 	}
 
 	.next-goal-value {
-		font-family: 'Nerko One';
+		font-family: 'Crossten';
 		color: white;
 		text-shadow: 0 0 2px black, 0 0 3px black, 0 0 4px black;
 		font-size: 1.6em;
 	}
 
 	.next-goal-title {
-		font-family: 'Nerko One';
+		font-family: 'Crossten';
 		color: white;
 		text-shadow: 0 0 2px black, 0 0 3px black, 0 0 4px black;
 		font-size: 1.4em;
