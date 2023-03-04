@@ -9,3 +9,10 @@ h1 {
 	font-size: 2em;
 	font-weight: normal;
 }
+
+@font-face {
+	font-family: 'Crossten';
+	font-style: normal;
+	font-weight: 400;
+	src: url('/fonts/Crossten-Black.ttf') format('truetype');
+}

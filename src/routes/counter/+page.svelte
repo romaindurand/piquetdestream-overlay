@@ -27,6 +27,7 @@
 
 <style>
 	h1 {
+		font-family: 'Crossten';
 		font-size: 120px;
 		color: #000;
 	}
