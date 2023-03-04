@@ -28,7 +28,7 @@
 <style>
 	h1 {
 		font-size: 120px;
-		color: #9a0022;
+		color: #000;
 	}
 
 	@property --num {
