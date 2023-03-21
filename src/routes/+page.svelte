@@ -6,7 +6,6 @@
 	let showNotification = false;
 	let notificationName = '';
 	let notificationMessage = '';
-	let randomAnimation = '1.webm';
 
 	$: {
 		if (notifications.length > 0) {
@@ -23,10 +22,9 @@
 		notificationName = name
 			? `${name} vient de donner ${amount} € !`
 			: `Un·e camarade vient de donner ${amount} € !`;
-		randomAnimation = `${Math.floor(Math.random() * 6) + 1}.webm`;
 		showNotification = true;
 		await tick();
-		await sleep(10);
+		await sleep(100);
 		showNotification = false;
 		await tick();
 		await sleep(0.5);
@@ -65,9 +63,6 @@
 			<h1>{notificationName}</h1>
 		</div>
 		{#if notificationMessage}<div class="message">{notificationMessage}</div>{/if}
-		<video autoplay transition:fade muted playsinline>
-			<source src={`./notifications/${randomAnimation}`} type="video/webm" />
-		</video>
 	</div>
 {/if}
 
@@ -85,17 +80,11 @@
 		flex-direction: column;
 		position: relative;
 	}
-	video {
-		position: relative;
-		left: 0;
-		margin-top: 20px;
-		width: 500px;
-	}
 
 	.nameplate {
 		position: relative;
 		margin: 20px 0 0 0;
-		padding: 0 50px;
+		padding: 20px 50px;
 		font-weight: normal;
 		color: #9a0022;
 		border: solid #9a0022 8px;
