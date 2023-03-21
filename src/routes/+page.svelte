@@ -24,7 +24,7 @@
 			: `Un·e camarade vient de donner ${amount} € !`;
 		showNotification = true;
 		await tick();
-		await sleep(100);
+		await sleep(10);
 		showNotification = false;
 		await tick();
 		await sleep(0.5);
